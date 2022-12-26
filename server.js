@@ -11,6 +11,9 @@ connect()
 app.use(express.json())
 //routes
 app.use('/',boardRouter)
+app.get('/',(req,res)=>{
+    res.json({message:"welcom to backend"})
+})
 
 app.listen('8000',()=>{
     console.log("server is started")
