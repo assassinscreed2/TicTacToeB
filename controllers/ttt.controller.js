@@ -3,7 +3,6 @@ require('../db/model')
 const User = mongoose.model('User')
 const Game = mongoose.model('Game')
 const {hashSync, compareSync} = require('bcrypt')
-const jwt = require('jsonwebtoken')
 
 
 async function isGamePresent(game){
@@ -18,7 +17,6 @@ async function isUserPresent(user){
 
 async function deleteGame(req,res){
     const result = await Game.findByIdAndDelete(req.body._id);
-    console.log(result)
     return res.json({message:"deleted"})
 }
 
@@ -112,11 +110,8 @@ async function login(req,res){
             user: user
         }
 
-        const token = jwt.sign(payload,"SecretKey123!@#", { expiresIn : "7d"})
-
         res.status(200).json({
             message: "Logged In successfully",
-            token: token,
             user:user
         })
 
@@ -153,7 +148,6 @@ async function createGame(users){
         end:false,
         time:curTime
     }
-    console.log(curTime)
     const game = new Game(gameData)
 
     try{
@@ -167,9 +161,7 @@ async function createGame(users){
 async function playGame(req,res){
     const user1 = req.body.user1;
     const user2 = req.body.user2;
-    console.log(user1+" "+user2)
     const isuser2 = await isUserPresent(user2)
-    console.log(isuser2)
     if(isuser2.length == 0 || user1 === user2){
         return res.json({message:"not exist"})
     }
